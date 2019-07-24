@@ -5,7 +5,7 @@ setup(name='stock_project',
       packages=['stock_project'],
       entry_points={
           'console_scripts': [
-              'stock_project = stock_project.src.__main__:main'
+              'stock_project = stock_project.__main__:main'
           ]
       },
       )
