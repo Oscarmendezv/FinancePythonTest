@@ -13,6 +13,18 @@ class DataIngestion:
 
     @classmethod
     def download_data_yahoo(cls, stock_names, start_date, end_date):
+        """ A function that requests stock information to the yahoo API. The retrieved data is persisted using the DataIngestionAPI.
+        
+        Parameters
+        ----------
+        stock_names: list
+                A list with the stock names you want information about
+        start_date: str in YYYY-MM-DD format
+                Beginning day from which you want data
+        end_date: str in YYYY-MM-DD format
+                Date until which you want data
+         """
+
         # We set the paths to persist the data
         data_filename = "data_yahoo_" + start_date +"_to_" + end_date + ".joblib"
         full_data_path = (cls.save_dir / "../data/yahoo/" / data_filename).resolve()
@@ -24,6 +36,8 @@ class DataIngestion:
             # We obtain the data from yahoo, clean it and concatenate it all together into a pandas DataFrame
             for name in stock_names:
                 share = yf.Ticker(name)
+
+                # We try requesting the data. If it fails, write the stock to a csv
                 try:
                     data = share.history(start=start_date, end=end_date)
                     data = DataProcessing.clean_data(data)
@@ -39,6 +53,19 @@ class DataIngestion:
 
     @classmethod
     def download_data_quandl(cls, stock_names, start_date, end_date):
+        """ A function that requests stock information to the quandl API. You need to have a token for it,
+        which is set in the __init__.py file. The retrieved data is persisted using the DataIngestionAPI.
+        
+        Parameters
+        ----------
+        stock_names: list
+                A list with the stock names you want information about
+        start_date: str in YYYY-MM-DD format
+                Beginning day from which you want data
+        end_date: str in YYYY-MM-DD format
+                Date until which you want data
+         """
+
         # We set the paths to persist the data
         data_filename = "data_quandl_" + start_date +"_to_" + end_date + ".joblib"
         full_data_path = (cls.save_dir / "../data/quandl" / data_filename).resolve()

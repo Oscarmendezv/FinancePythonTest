@@ -9,6 +9,8 @@ class StockNameScraper:
 
     @staticmethod
     def obtain_stock_names():
+        """ Scrapes a wikipedia page to take the names of the stocks present in the S&P400. It persists the obtained list of names. """
+
         url = 'https://en.wikipedia.org/wiki/List_of_S%26P_400_companies'
         stock_names = []
         response = requests.get(url, timeout=5)

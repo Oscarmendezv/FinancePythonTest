@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     # Using stock names, and the previously set dates, we download the data for yahoo and quandl
     p1 = Process(target = DataIngestion.download_data_yahoo(stock_names, start_date, end_date))
-    p2 = Process(target = DataIngestion.download_data_quandl(stock_names, '2017-01-01', '2018-01-01'))
+    p2 = Process(target = DataIngestion.download_data_quandl(stock_names, start_date, end_date))
     p1.start()
     p2.start()
 
@@ -59,3 +59,22 @@ if __name__ == "__main__":
     # Same for the std deviation calculations
     DataProcessing.make_comparison((yahoo_return, yahoo_high_low, yahoo_turnover), 
                             (quandl_return, quandl_high_low, quandl_turnover), start_date='2017-08-17', end_date='2017-12-05')
+
+    # Now, we need to consolidate the data
+    consolidated_return = DataProcessing.consolidate_dataframes(stock_names, yahoo_return, quandl_return)
+    consolidated_high_low = DataProcessing.consolidate_dataframes(stock_names, yahoo_high_low, quandl_high_low)
+    consolidated_turnover = DataProcessing.consolidate_dataframes(stock_names, yahoo_turnover, quandl_turnover)
+
+    # Next step is to make consolidated calculations
+    DataProcessing.calculate_mean(consolidated_return, consolidated_high_low, consolidated_turnover)
+
+    DataProcessing.calculate_variance(consolidated_return, consolidated_high_low, consolidated_turnover, 
+                            start_date=' 2017-02-11', end_date='2017-11-08')
+
+    # We finish by comparing the consolidated data to yahoo and quandl
+    DataProcessing.make_comparison((consolidated_return, consolidated_high_low, consolidated_turnover),
+                        (quandl_return, quandl_high_low, quandl_turnover), start_date='2017-08-17', end_date='2017-12-05',
+                         compare_consolidated_to="quandl")
+    DataProcessing.make_comparison((consolidated_return, consolidated_high_low, consolidated_turnover),
+                        (yahoo_return, yahoo_high_low, yahoo_turnover), start_date='2017-08-17', end_date='2017-12-05',
+                         compare_consolidated_to= "yahoo")
