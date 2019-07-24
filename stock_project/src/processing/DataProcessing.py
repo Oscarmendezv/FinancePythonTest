@@ -259,8 +259,9 @@ class DataProcessing:
             name_data_to_compare = name + '_y'
             if name in data and name in data_to_compare:
                 consolidated_data[name] = np.where(np.logical_or(combined_data[name_data].notna(), 
-                 combined_data[name_data_to_compare].notna()) & combined_data[name_data] < combined_data[name_data_to_compare],
-                 combined_data[name_data], combined_data[name_data_to_compare])
+                                                combined_data[name_data_to_compare].notna()) 
+                                                & combined_data[name_data].abs() < combined_data[name_data_to_compare].abs(),
+                                                combined_data[name_data], combined_data[name_data_to_compare])
             
             elif name in data:
                 consolidated_data[name] = combined_data[name]
